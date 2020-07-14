@@ -1,0 +1,584 @@
+{{#if add}}
+<div class='div-request div-hide'>add</div>
+{{else if manord}}
+<div class='div-request div-hide'>manord</div>
+{{else if edit}}
+<div class='div-request div-hide'>editOrd</div>
+{{/if}}
+
+
+<ol class="breadcrumb">
+    <li><a href="dashboard.php">Home</a></li>
+    <li>Order</li>
+    <li class="active">
+        {{#if add}}
+        Add Order
+        {{else if manord}}
+        Manage Order
+        {{/if}}
+    </li>
+</ol>
+
+
+<h4>
+    <i class='glyphicon glyphicon-circle-arrow-right'></i>
+    {{#if add}}
+    Add Order
+    {{else if manord}}
+    Manage Order
+    {{else if editOrd}}
+    Edit Order
+    {{/if}}
+</h4>
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+
+        {{#if add}}
+        <i class="glyphicon glyphicon-plus-sign"></i> Add Order
+        {{else if manord}}
+        <i class="glyphicon glyphicon-edit"></i> Manage Order
+        {{else if editOrd}}
+        <i class="glyphicon glyphicon-edit"></i> Edit Order
+        {{/if}}
+
+    </div>
+    <!--/panel-->
+    <div class="panel-body">
+
+        {{#if add}}
+
+        <div class="success-messages"></div>
+        <!--/success-messages-->
+
+        <form class="form-horizontal" method="POST" action="api/addOrder" id="createOrderForm">
+
+            <div class="form-group">
+                <label for="orderDate" class="col-sm-2 control-label">Order Date</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="orderDate" name="orderDate" autocomplete="off" />
+                </div>
+            </div>
+            <!--/form-group-->
+            <div class="form-group">
+                <label for="clientName" class="col-sm-2 control-label">Client Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="clientName" name="clientName" placeholder="Client Name"
+                        autocomplete="off" />
+                </div>
+            </div>
+            <!--/form-group-->
+            <div class="form-group">
+                <label for="clientContact" class="col-sm-2 control-label">Client Contact</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="clientContact" name="clientContact"
+                        placeholder="Contact Number" autocomplete="off" />
+                </div>
+            </div>
+            <!--/form-group-->
+
+            <table class="table" id="productTable">
+                <thead>
+                    <tr>
+                        <th style="width:40%;">Product</th>
+                        <th style="width:20%;">Rate</th>
+                        <th style="width:15%;">Quantity</th>
+                        <th style="width:15%;">Total</th>
+                        <th style="width:10%;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each numbers}}
+                    <tr id="row{{this}}" class="{{this}}">
+                        <td style="margin-left:20px;">
+                            <div class="form-group">
+
+                                <select class="form-control" name="productName[]" id="productName{{this}}"
+                                    onchange="getProductData({{this}})">
+                                    <option value="">~~SELECT~~</option>
+                                    {{#each ../products}}
+                                    <option value='{{this.product_id}}' id='changeProduct{{this.product_id}}'>{{this.product_name}}</option>
+                                    {{/each}}
+                                </select>
+                            </div>
+                        </td>
+                        <td style="padding-left:20px;">
+                            <input type="text" name="rate[]" id="rate{{this}}" autocomplete="off"
+                                disabled="true" class="form-control" />
+                            <input type="hidden" name="rateValue[]" id="rateValue{{this}}" autocomplete="off"
+                                class="form-control" />
+                        </td>
+                        <td style="padding-left:20px;">
+                            <div class="form-group">
+                                <input type="number" name="quantity[]" id="quantity{{this}}"
+                                    onkeyup="getTotal({{this}})" autocomplete="off" class="form-control"
+                                    min="1" />
+                            </div>
+                        </td>
+                        <td style="padding-left:20px;">
+                            <input type="text" name="total[]" id="total{{this}}" autocomplete="off"
+                                class="form-control" disabled="true" />
+                            <input type="hidden" name="totalValue[]" id="totalValue{{this}}" autocomplete="off"
+                                class="form-control" />
+                        </td>
+                        <td>
+
+                            <button class="btn btn-default removeProductRowBtn" type="button" id="removeProductRowBtn"
+                                onclick="removeProductRow({{this}})"><i
+                                    class="glyphicon glyphicon-trash"></i></button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="subTotal" class="col-sm-3 control-label">Sub Amount</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="subTotal" name="subTotal" disabled="true" />
+                        <input type="hidden" class="form-control" id="subTotalValue" name="subTotalValue" />
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="vat" class="col-sm-3 control-label">VAT 13%</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="vat" name="vat" disabled="true" />
+                        <input type="hidden" class="form-control" id="vatValue" name="vatValue" />
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="totalAmount" class="col-sm-3 control-label">Total Amount</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="totalAmount" name="totalAmount" disabled="true" />
+                        <input type="hidden" class="form-control" id="totalAmountValue" name="totalAmountValue" />
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="discount" class="col-sm-3 control-label">Discount</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="discount" name="discount" onkeyup="discountFunc()"
+                            autocomplete="off" />
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="grandTotal" class="col-sm-3 control-label">Grand Total</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="grandTotal" name="grandTotal" disabled="true" />
+                        <input type="hidden" class="form-control" id="grandTotalValue" name="grandTotalValue" />
+                    </div>
+                </div>
+                <!--/form-group-->
+            </div>
+            <!--/col-md-6-->
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="paid" class="col-sm-3 control-label">Paid Amount</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="paid" name="paid" autocomplete="off"
+                            onkeyup="paidAmount()" />
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="due" class="col-sm-3 control-label">Due Amount</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="due" name="due" disabled="true" />
+                        <input type="hidden" class="form-control" id="dueValue" name="dueValue" />
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="clientContact" class="col-sm-3 control-label">Payment Type</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="paymentType" id="paymentType">
+                            <option value="">~~SELECT~~</option>
+                            <option value="1">Cheque</option>
+                            <option value="2">Cash</option>
+                            <option value="3">Credit Card</option>
+                        </select>
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="clientContact" class="col-sm-3 control-label">Payment Status</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="paymentStatus" id="paymentStatus">
+                            <option value="">~~SELECT~~</option>
+                            <option value="1">Full Payment</option>
+                            <option value="2">Advance Payment</option>
+                            <option value="3">No Payment</option>
+                        </select>
+                    </div>
+                </div>
+                <!--/form-group-->
+            </div>
+            <!--/col-md-6-->
+
+
+            <div class="form-group submitButtonFooter">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" class="btn btn-default" onclick="addRow()" id="addRowBtn"
+                        data-loading-text="Loading..."> <i class="glyphicon glyphicon-plus-sign"></i> Add Row </button>
+
+                    <button type="submit" id="createOrderBtn" data-loading-text="Loading..." class="btn btn-success"><i
+                            class="glyphicon glyphicon-ok-sign"></i> Save Changes</button>
+
+                    <button type="reset" class="btn btn-default" onclick="resetOrderForm()"><i
+                            class="glyphicon glyphicon-erase"></i> Reset</button>
+                </div>
+            </div>
+        </form>
+
+        {{else if manord}}
+
+        <div id="success-messages"></div>
+
+        <table class="table" id="manageOrderTable">
+            <thead>
+                <tr>
+                    <th>S.N.</th>
+                    <th>Order Date</th>
+                    <th>Client Name</th>
+                    <th>Contact</th>
+                    <th>Total Order Item</th>
+                    <th>Payment Status</th>
+                    <th>Option</th>
+                </tr>
+            </thead>
+            <tbody id="manageOrderTableBody">
+
+            </tbody>
+        </table>
+
+        {{else if editOrd}}
+
+        <div class="success-messages"></div>
+        {{#if error}}
+        <div class="alert alert-danger">{{error}}</div>
+        {{/if}}
+        <!--/success-messages-->
+
+        {{#each orderDetails}}
+        <form class="form-horizontal" method="POST" action="php_action/editOrder.php" id="editOrderForm">
+
+            <div class="form-group">
+                <label for="orderDate" class="col-sm-2 control-label">Order Date</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="orderDate" name="orderDate" autocomplete="off"
+                        value="{{order_date}}" />
+                </div>
+            </div>
+            <!--/form-group-->
+            <div class="form-group">
+                <label for="clientName" class="col-sm-2 control-label">Client Name</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="clientName" name="clientName" placeholder="Client Name"
+                        autocomplete="off" value="{{client_name}}" />
+                </div>
+            </div>
+            <!--/form-group-->
+            <div class="form-group">
+                <label for="clientContact" class="col-sm-2 control-label">Client Contact</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="clientContact" name="clientContact"
+                        placeholder="Contact Number" autocomplete="off" value="{{client_contact}}" />
+                </div>
+            </div>
+            <!--/form-group-->
+
+            <table class="table" id="productTable">
+                <thead>
+                    <tr>
+                        <th style="width:40%;">Product</th>
+                        <th style="width:20%;">Rate</th>
+                        <th style="width:15%;">Quantity</th>
+                        <th style="width:15%;">Total</th>
+                        <th style="width:10%;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                   
+                   {{#each ../orderItemDetails}}
+
+                    <tr id="row{{increment @index}}" class="{{@index}}">
+                        <td style="margin-left:20px;">
+                            <div class="form-group">
+
+
+                                <select class="form-control" name="productName[]" id="productName{{increment @index}}"
+                                    onchange="getProductData({{increment @index}})">
+                                    
+                                    <option value="">~~SELECT~~</option>
+                                    {{#formatProductOptions product_id ../../allProductLists }}
+                                    {{/formatProductOptions}}
+                                   
+                                </select>
+                            </div>
+                        </td>
+                        <td style="padding-left:20px;">
+                            <input type="text" name="rate[]" id="rate{{increment @index}}" autocomplete="off"
+                                disabled="true" class="form-control" value="{{rate}}" />
+                            <input type="hidden" name="rateValue[]" id="rateValue{{increment @index}}" autocomplete="off"
+                                class="form-control" value="{{rate}}" />
+                        </td>
+                        <td style="padding-left:20px;">
+                            <div class="form-group">
+                                <input type="number" name="quantity[]" id="quantity{{increment @index}}"
+                                    onkeyup="getTotal({{increment @index}})" autocomplete="off" class="form-control" min="1"
+                                    value="{{quantity}}" />
+                            </div>
+                        </td>
+                        <td style="padding-left:20px;">
+                            <input type="text" name="total[]" id="total{{increment @index}}" autocomplete="off"
+                                class="form-control" disabled="true" value="{{total}}" />
+                            <input type="hidden" name="totalValue[]" id="totalValue{{increment @index}}" autocomplete="off"
+                                class="form-control" value="{{total}}" />
+                        </td>
+                        <td>
+
+                            <button class="btn btn-default removeProductRowBtn" type="button" id="removeProductRowBtn"
+                                onclick="removeProductRow({{increment @index}})"><i
+                                    class="glyphicon glyphicon-trash"></i></button>
+                        </td>
+                    </tr>
+
+                   {{/each}}
+                </tbody>
+            </table>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="subTotal" class="col-sm-3 control-label">Sub Amount</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="subTotal" name="subTotal" disabled="true"
+                            value="{{sub_total}}" />
+                        <input type="hidden" class="form-control" id="subTotalValue" name="subTotalValue"
+                            value="{{sub_total}}" />
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="vat" class="col-sm-3 control-label">VAT 13%</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="vat" name="vat" disabled="true"
+                            value="{{vat}}" />
+                        <input type="hidden" class="form-control" id="vatValue" name="vatValue"
+                            value="{{vat}}" />
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="totalAmount" class="col-sm-3 control-label">Total Amount</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="totalAmount" name="totalAmount" disabled="true"
+                            value="{{total_amount}}" />
+                        <input type="hidden" class="form-control" id="totalAmountValue" name="totalAmountValue"
+                            value="{{total_amount}}" />
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="discount" class="col-sm-3 control-label">Discount</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="discount" name="discount" onkeyup="discountFunc()"
+                            autocomplete="off" value="{{discount}}" />
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="grandTotal" class="col-sm-3 control-label">Grand Total</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="grandTotal" name="grandTotal" disabled="true"
+                            value="{{grand_total}}" />
+                        <input type="hidden" class="form-control" id="grandTotalValue" name="grandTotalValue"
+                            value="{{grand_total}}" />
+                    </div>
+                </div>
+                <!--/form-group-->
+            </div>
+            <!--/col-md-6-->
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="paid" class="col-sm-3 control-label">Paid Amount</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="paid" name="paid" autocomplete="off"
+                            onkeyup="paidAmount()" value="{{paid}}" />
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="due" class="col-sm-3 control-label">Due Amount</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="due" name="due" disabled="true"
+                            value="{{due}}" />
+                        <input type="hidden" class="form-control" id="dueValue" name="dueValue"
+                            value="{{due}}" />
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="clientContact" class="col-sm-3 control-label">Payment Type</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="paymentType" id="paymentType">
+                            <option value="">~~SELECT~~</option>
+                            <option value="1" <?php if($data[11] == 1) {
+				      		echo "selected";
+				      	} ?>>Cheque</option>
+                            <option value="2" <?php if($data[11] == 2) {
+				      		echo "selected";
+				      	} ?>>Cash</option>
+                            <option value="3" <?php if($data[11] == 3) {
+				      		echo "selected";
+				      	} ?>>Credit Card</option>
+                        </select>
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="clientContact" class="col-sm-3 control-label">Payment Status</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="paymentStatus" id="paymentStatus">
+                            <option value="">~~SELECT~~</option>
+                             {{#formatPaymentStatus payment_status}}{{/formatPaymentStatus}}
+                            {{!-- <option value="1" {{#formatPaymentStatus payment_status}} 'selected' {{/modIf}}>Full Payment</option>
+                            <option value="2" {{#modIf payment_status 2}} 'selected' {{/modIf}}>{{payment_status}}Advance Payment</option>
+                            <option value="3" {{#modIf payment_status 3}} 'selected' {{/modIf}}>No Payment</option> --}}
+                        </select>
+                    </div>
+                </div>
+                <!--/form-group-->
+            </div>
+            <!--/col-md-6-->
+
+
+            <div class="form-group editButtonFooter">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" class="btn btn-default" onclick="addRow()" id="addRowBtn"
+                        data-loading-text="Loading..."> <i class="glyphicon glyphicon-plus-sign"></i> Add Row </button>
+
+                    <input type="hidden" name="orderId" id="orderId" value="<?php echo $_GET['i']; ?>" />
+
+                    <button type="submit" id="editOrderBtn" data-loading-text="Loading..." class="btn btn-success"><i
+                            class="glyphicon glyphicon-ok-sign"></i> Save Changes</button>
+
+                </div>
+            </div>
+        </form>
+        {{/each}}
+
+       {{else}}
+
+
+    </div>
+    <!--/panel-->
+</div>
+<!--/panel-->
+
+
+<!-- edit order -->
+<div class="modal fade" tabindex="-1" role="dialog" id="paymentOrderModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="glyphicon glyphicon-edit"></i> Edit Payment</h4>
+            </div>
+
+            <div class="modal-body form-horizontal" style="max-height:500px; overflow:auto;">
+
+                <div class="paymentOrderMessages"></div>
+
+
+                <div class="form-group">
+                    <label for="due" class="col-sm-3 control-label">Due Amount</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="due" name="due" disabled="true" />
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="payAmount" class="col-sm-3 control-label">Pay Amount</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="payAmount" name="payAmount" />
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="clientContact" class="col-sm-3 control-label">Payment Type</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="paymentType" id="paymentType">
+                            <option value="">~~SELECT~~</option>
+                            <option value="1">Cheque</option>
+                            <option value="2">Cash</option>
+                            <option value="3">Credit Card</option>
+                        </select>
+                    </div>
+                </div>
+                <!--/form-group-->
+                <div class="form-group">
+                    <label for="clientContact" class="col-sm-3 control-label">Payment Status</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name="paymentStatus" id="paymentStatus">
+                            <option value="">~~SELECT~~</option>
+                            <option value="1">Full Payment</option>
+                            <option value="2">Advance Payment</option>
+                            <option value="3">No Payment</option>
+                        </select>
+                    </div>
+                </div>
+                <!--/form-group-->
+
+            </div>
+            <!--/modal-body-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"> <i
+                        class="glyphicon glyphicon-remove-sign"></i> Close</button>
+                <button type="button" class="btn btn-primary" id="updatePaymentOrderBtn" data-loading-text="Loading...">
+                    <i class="glyphicon glyphicon-ok-sign"></i> Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- /edit order-->
+
+<!-- remove order -->
+<div class="modal fade" tabindex="-1" role="dialog" id="removeOrderModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><i class="glyphicon glyphicon-trash"></i> Remove Order</h4>
+            </div>
+            <div class="modal-body">
+
+                <div class="removeOrderMessages"></div>
+
+                <p>Do you really want to remove ?</p>
+            </div>
+            <div class="modal-footer removeProductFooter">
+                <button type="button" class="btn btn-default" data-dismiss="modal"> <i
+                        class="glyphicon glyphicon-remove-sign"></i> Close</button>
+                <button type="button" class="btn btn-primary" id="removeOrderBtn" data-loading-text="Loading..."> <i
+                        class="glyphicon glyphicon-ok-sign"></i> Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- /remove order-->
+
+{{/if}}
+
+
+<script src="custom/js/order.js"></script>
+
