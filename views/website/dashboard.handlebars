@@ -15,9 +15,9 @@
         <div class="panel panel-success">
             <div class="panel-heading">
 
-                <a href="/product" style="text-decoration:none;color:black;">
-                    Total Product
-                    <span class="badge pull pull-right"></span>
+                <a href="/product" style="text-decoration:none;color:black;" id="totalProducts">
+                    Total Products
+                    <span class="badge pull pull-right"> Loading... </span>
                 </a>
 
             </div>
@@ -30,9 +30,9 @@
     <div class="col-md-4">
         <div class="panel panel-info">
             <div class="panel-heading">
-                <a href="orders.php?o=manord" style="text-decoration:none;color:black;">
+                <a href="/order?o=manord" style="text-decoration:none;color:black;" id="totalOrders">
                     Total Orders
-                    <span class="badge pull pull-right"></span>
+                    <span class="badge pull pull-right">Loading...</span>
                 </a>
 
             </div>
@@ -45,9 +45,9 @@
     <div class="col-md-4">
         <div class="panel panel-danger">
             <div class="panel-heading">
-                <a href="product.php" style="text-decoration:none;color:black;">
+                <a href="/product" style="text-decoration:none;color:black;" id="lowStocks">
                     Low Stock
-                    <span class="badge pull pull-right"></span>
+                    <span class="badge pull pull-right"> Loading... </span>
                 </a>
 
             </div>
@@ -59,25 +59,39 @@
 
     <div class="col-md-4">
         <div class="card">
-            <div class="cardHeader">
-                <h1></h1>
+            <div class="cardHeader" id="totalUnitsSold">
+                <h1>Loading....</h1>
             </div>
 
             <div class="cardContainer">
-                <p></p>
+                <p>Total Units Sold</p>
             </div>
         </div>
         <br />
 
         <div class="card">
-            <div class="cardHeader" style="background-color:#245580;">
+            <div class="cardHeader" style="background-color:#245580;" id="totalRevenue">
                 <h1>
-                    {{!-- Total revenue here --}}
+                    Loading...
                 </h1>
             </div>
 
             <div class="cardContainer">
-                <p> <i class="glyphicon glyphicon-usd"></i> Total Revenue</p>
+                <p> Total Revenue</p>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="card">
+            <div class="cardHeader" style="background-color:#ec9a2f;" id="totalReceived">
+                <h1>
+                    Loading...
+                </h1>
+            </div>
+
+            <div class="cardContainer">
+                <p> Total Received</p>
             </div>
         </div>
 
@@ -100,6 +114,7 @@
 <!-- fullCalendar 2.2.5 -->
 <script src="assests/plugins/moment/moment.min.js"></script>
 <script src="assests/plugins/fullcalendar/fullcalendar.min.js"></script>
+<script src="custom/js/dashboard.js"></script>
 
 
 <script type="text/javascript">

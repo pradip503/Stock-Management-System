@@ -10,7 +10,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 // helpers
-var {formatProductOptions, increment, formatPaymentStatus} = require('./helpers/order')
+var {formatProductOptions, increment, formatPaymentType ,formatPaymentStatus} = require('./helpers/order')
 
 var app = express();
 
@@ -22,7 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //set default engine
 app.set('view engine', 'handlebars');
-app.engine('handlebars', exphs({defaultLayout: 'index',helpers: {formatProductOptions, increment, formatPaymentStatus}}));
+app.engine('handlebars', exphs({defaultLayout: 'index',helpers: {formatProductOptions, increment, formatPaymentStatus,formatPaymentType}}));
 
 
 app.use('/', indexRouter);
