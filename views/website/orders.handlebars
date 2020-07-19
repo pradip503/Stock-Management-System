@@ -5,7 +5,7 @@
 {{else if edit}}
 <div class='div-request div-hide'>editOrd</div>
 {{/if}}
-
+{{!-- 
 
 <ol class="breadcrumb">
     <li><a href="dashboard.php">Home</a></li>
@@ -17,9 +17,9 @@
         Manage Order
         {{/if}}
     </li>
-</ol>
+</ol> --}}
 
-
+{{!-- 
 <h4>
     <i class='glyphicon glyphicon-circle-arrow-right'></i>
     {{#if add}}
@@ -29,7 +29,7 @@
     {{else if editOrd}}
     Edit Order
     {{/if}}
-</h4>
+</h4> --}}
 
 
 
@@ -53,188 +53,181 @@
         <div class="success-messages"></div>
         <!--/success-messages-->
 
-        <form class="form-horizontal" method="POST" action="api/addOrder" id="createOrderForm">
-
-            <div class="form-group">
-                <label for="orderDate" class="col-sm-2 control-label">Order Date</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="orderDate" name="orderDate" autocomplete="off" />
-                </div>
-            </div>
-            <!--/form-group-->
-            <div class="form-group">
-                <label for="clientName" class="col-sm-2 control-label">Client Name</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="clientName" name="clientName" placeholder="Client Name"
-                        autocomplete="off" />
-                </div>
-            </div>
-            <!--/form-group-->
-            <div class="form-group">
-                <label for="clientContact" class="col-sm-2 control-label">Client Contact</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="clientContact" name="clientContact"
-                        placeholder="Contact Number" autocomplete="off" />
-                </div>
-            </div>
-            <!--/form-group-->
-
-            <table class="table" id="productTable">
-                <thead>
-                    <tr>
-                        <th style="width:40%;">Product</th>
-                        <th style="width:20%;">Rate</th>
-                        <th style="width:15%;">Quantity</th>
-                        <th style="width:15%;">Total</th>
-                        <th style="width:10%;"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each numbers}}
-                    <tr id="row{{this}}" class="{{this}}">
-                        <td style="margin-left:20px;">
-                            <div class="form-group">
-
-                                <select class="form-control" name="productName[]" id="productName{{this}}"
-                                    onchange="getProductData({{this}})">
-                                    <option value="">~~SELECT~~</option>
-                                    {{#each ../products}}
-                                    <option value='{{this.product_id}}' id='changeProduct{{this.product_id}}'>{{this.product_name}}</option>
+        <form method="POST" class="row" style="line-height:-40px;" action="api/addOrder" id="createOrderForm">
+        <div class="form-group col-md-8">
+        <label>Invoice no </label> <input  class="text-center" disabled=true id="invoice_no" name="invoice_no" style="height:30px;margin-left:10px;outline:none;border:1px solid lightblue;border-radius: 5px;">              
+        </div>
+        <div class="form-group col-md-4">
+         <label>Invoice Date </label> <input id="invoice_date" type="date" class="text-center" style="height:30px;margin-left:10px;outline:none;border:1px solid lightblue;border-radius: 5px;">
+        </div>
+        <table  style="margin-left: 10px;">
+<tr >
+    <td>
+        
+        <label>Customer name</label> <input id="client_name" style="height:30px;margin-left:10px;outline:none;border:1px solid lightblue;border-radius: 5px;">              
+      
+        </td>
+        
+        <td>
+      
+         <label  style="margin-left: 10px;">Contact no. </label> <input id="client_contact" style="height:30px;margin-left:10px;outline:none;border:1px solid lightblue;border-radius: 5px;">
+        
+        </td>
+</tr>
+ 
+        </table>
+           
+     
+           
+            <div style="display: flex;position: relative; top:15px; left:80px; justify-content: center;width: 100%;">
+            <div>
+                <label>Itemname</label style="height:30px;margin-left:100px;">
+                <select class="form-control text-center" id="item_select" style="width:200px;text-align: center;text-align-last: center;outline:none;border:1px solid lightblue;border-radius: 5px;">
+                    <option value="0">Select Item</option>
+                            {{#each products}}
+                                    <option  data-rate='{{this.rate}}'  data-unit='{{this.unit}}' value='{{this.product_id}}' id='changeProduct{{this.product_id}}'>{{this.product_name}}</option>
                                     {{/each}}
-                                </select>
-                            </div>
-                        </td>
-                        <td style="padding-left:20px;">
-                            <input type="text" name="rate[]" id="rate{{this}}" autocomplete="off"
-                                disabled="true" class="form-control" />
-                            <input type="hidden" name="rateValue[]" id="rateValue{{this}}" autocomplete="off"
-                                class="form-control" />
-                        </td>
-                        <td style="padding-left:20px;">
-                            <div class="form-group">
-                                <input type="number" name="quantity[]" id="quantity{{this}}"
-                                    onkeyup="getTotal({{this}})" autocomplete="off" class="form-control"
-                                    min="1" />
-                            </div>
-                        </td>
-                        <td style="padding-left:20px;">
-                            <input type="text" name="total[]" id="total{{this}}" autocomplete="off"
-                                class="form-control" disabled="true" />
-                            <input type="hidden" name="totalValue[]" id="totalValue{{this}}" autocomplete="off"
-                                class="form-control" />
-                        </td>
-                        <td>
-
-                            <button class="btn btn-default removeProductRowBtn" type="button" id="removeProductRowBtn"
-                                onclick="removeProductRow({{this}})"><i
-                                    class="glyphicon glyphicon-trash"></i></button>
-                        </td>
-                    </tr>
-                    {{/each}}
+                </select>
+                </div>
+                <div style="margin-top: 5px;">
+                <label  style="font-size:10px;  margin-left:10px; color:red;">Available Quantity</label><label  style="font-size:12px; margin-left:10px; color:red;" id="available_quantity">0</label>
+            </div>
+        
+             <div style="margin-left: 20px;">
+                <label>Quantity</label>
+               <input type="number" class="text-center" id="added_quantity" value=0 min=0 style="height:30px;margin-left:10px;outline:none;border:1px solid lightblue;border-radius: 5px;">
+            </div>
+              <div class="form-group col-md-3">
+               <button id="add_button" class="btn btn-primary">ADD</button>
+            </div>
+            <br/>
+            </div>
+            <div style="width: 90%; margin-left: 40px; margin-top: 25px;">            
+                <table border="1" style="border:1px solid #eee;" class="text-center  col-md-12" id="productTable">
+             
+                    <tr class="row">
+                        <th class="col-md-1 text-center">Product ID</th>
+                        <th class="col-md-4 text-center">Product</th>
+                        <th class="col-md-1  text-center">Quantity</th>
+                        <th class="col-md-2  text-center">Rate</th>
+                        <th class="col-md-2  text-center">Total</th>
+                        <th class="col-md-2  text-center">Action</th>
+                    </tr>  </thead>
+            
                 </tbody>
             </table>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="subTotal" class="col-sm-3 control-label">Sub Amount</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="subTotal" name="subTotal" disabled="true" />
-                        <input type="hidden" class="form-control" id="subTotalValue" name="subTotalValue" />
+                <table border="1" style="border:1px solid #eee; margin-bottom: 10px;margin-top:10px;" class="col-md-12" id="producttotalTable">
+             
+                    <tr class="row">
+                        <th class="col-md-1 text-center"></th>
+                        <th class="col-md-4  text-center">Total:</th>
+                        <th class="col-md-1  text-center"><label id="total_quantity">0</label></th>
+                        <th class="col-md-2"></th>
+                        <th class="col-md-2  text-center"><label id="total_amount">0.00</label></th>
+                        <th class="col-md-2"></th>
+                    </tr>  </thead>
+            
+                </tbody>
+            </table>
+            </div>
+           <br/>
+           <div style="margin-left:20px;display:flex;justify-content: space-evenly; width:100%;">
+               <div class="form-group text-center" style="width:180px;">
+                    <label for="subTotal">Sub Amount</label>
+                    <div >
+                        <input  type="number" value="0.00" class="form-control text-center" id="subTotal" name="subTotal" disabled="true" />
                     </div>
                 </div>
-                <!--/form-group-->
-                <div class="form-group">
-                    <label for="vat" class="col-sm-3 control-label">VAT 13%</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="vat" name="vat" disabled="true" />
-                        <input type="hidden" class="form-control" id="vatValue" name="vatValue" />
-                    </div>
-                </div>
-                <!--/form-group-->
-                <div class="form-group">
-                    <label for="totalAmount" class="col-sm-3 control-label">Total Amount</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="totalAmount" name="totalAmount" disabled="true" />
-                        <input type="hidden" class="form-control" id="totalAmountValue" name="totalAmountValue" />
-                    </div>
-                </div>
-                <!--/form-group-->
-                <div class="form-group">
-                    <label for="discount" class="col-sm-3 control-label">Discount</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="discount" name="discount" onkeyup="discountFunc()"
+                 <div class="form-group text-center" style="margin-left: 5px; width:180px;">
+                    <label for="discount">Discount
+                        <select id= "discount_type">
+                            <option value="1">%</option>
+                            <option value="2">Rs</option>
+                        </select>
+                    </label>
+                    <div>
+                        <input type="number" value="0.00" class="form-control text-center" id="add_discount" name="discount" 
                             autocomplete="off" />
                     </div>
                 </div>
-                <!--/form-group-->
-                <div class="form-group">
-                    <label for="grandTotal" class="col-sm-3 control-label">Grand Total</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="grandTotal" name="grandTotal" disabled="true" />
-                        <input type="hidden" class="form-control" id="grandTotalValue" name="grandTotalValue" />
+                <div class="form-group text-center" style="margin-left: 5px; width:180px;">
+                    <label for="totalAmount">Taxable Amount</label>
+                    <div>
+                        <input  type="number" value="0.00" class="form-control text-center" id="totalAmount" name="totalAmount" disabled="true" />
                     </div>
                 </div>
                 <!--/form-group-->
-            </div>
-            <!--/col-md-6-->
+                <div class="form-group text-center" style="margin-left: 5px;  width:180px;">
+                    <label for="vat">VAT 13% <input id="vat_checkbox" type="checkbox" /></label> 
+                    <div>
+                        <input style="margin-top: -3px;" type="number" value="0.00" class="form-control text-center" id="add_vat" name="vat" disabled="true" />
+                      
+                    </div>
+                </div>
+               
+            <div class="form-group text-center" style="margin-left: 5px;  width:180px;">
+                    <label for="grandTotal">Grand Total</label>
+                    <div>
+                        <input  type="number" value="0.00" class="form-control text-center" id="add_grandtotal" name="grandTotal" disabled="true" />
+                      
+                    </div>
+                </div>
+           </div>
 
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="paid" class="col-sm-3 control-label">Paid Amount</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="paid" name="paid" autocomplete="off"
-                            onkeyup="paidAmount()" />
+        
+<div style="margin-left:20px;display:flex;justify-content: space-around; width:100%;">
+                <div class="form-group text-center"style="margin-left: 15px;  width:180px;">
+                    <label for="paid">Paid Amount</label>
+                    <div >
+                        <input  type="number" value="0.00" class="form-control text-center" id="add_paidamount" name="paid" autocomplete="off"
+                          />
                     </div>
                 </div>
                 <!--/form-group-->
-                <div class="form-group">
-                    <label for="due" class="col-sm-3 control-label">Due Amount</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="due" name="due" disabled="true" />
-                        <input type="hidden" class="form-control" id="dueValue" name="dueValue" />
+                <div class="form-group text-center" style="margin-left: 5px;  width:180px;">
+                    <label for="due" >Due Amount</label>
+                    <div>
+                        <input  type="number" value="0.00" class="form-control text-center" id="add_dueamount" name="due" disabled="true" />
+                       
                     </div>
                 </div>
                 <!--/form-group-->
-                <div class="form-group">
-                    <label for="clientContact" class="col-sm-3 control-label">Payment Type</label>
-                    <div class="col-sm-9">
-                        <select class="form-control" name="paymentType" id="paymentType">
-                            <option value="">~~SELECT~~</option>
-                            <option value="1">Cheque</option>
-                            <option value="2">Cash</option>
-                            <option value="3">Credit Card</option>
+                <div class="form-group" style="margin-left: 5px;  width:180px;">
+                    <label for="clientContact">Payment Type</label>
+                    <div>
+                        <select class="form-control" name="paymentType" id="add_payment_type">
+                            <option value="Cash">Cash</option>
+                            <option value="Cheque">Cheque</option>
+                            <option value="Credit Card">Credit Card</option>
                         </select>
                     </div>
                 </div>
                 <!--/form-group-->
-                <div class="form-group">
-                    <label for="clientContact" class="col-sm-3 control-label">Payment Status</label>
-                    <div class="col-sm-9">
-                        <select class="form-control" name="paymentStatus" id="paymentStatus">
-                            <option value="">~~SELECT~~</option>
-                            <option value="1">Full Payment</option>
-                            <option value="2">Advance Payment</option>
-                            <option value="3">No Payment</option>
+                <div class="form-group" style="margin-left: 5px;  width:180px;">
+                    <label for="clientContact">Payment Status</label>
+                    <div>
+                        <select class="form-control" name="paymentStatus" id="add_payment_status">
+                        
+                            <option value="Full Payment">Full Payment</option>
+                            <option value="Advance Payment">Advance Payment</option>
+                            <option value="No Payment">No Payment</option>
                         </select>
                     </div>
                 </div>
+
+                 <div class="form-group" style="margin-left: 5px;  width:180px; margin-top: 10px;">
+                    <button type="submit" id="saveorder" data-loading-text="Loading..." class="btn btn-success"><i
+                            class="glyphicon glyphicon-ok-sign"></i> Save</button>
+                              <button style="margin-top: 10px;" type="submit" id="createOrderBtn" data-loading-text="Loading..." class="btn btn-danger"><i
+                            class="glyphicon glyphicon-ok-sign"></i>Print and Save</button>
+                </div>
+            </div>
                 <!--/form-group-->
             </div>
             <!--/col-md-6-->
 
 
-            <div class="form-group submitButtonFooter">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button type="button" class="btn btn-default" onclick="addRow()" id="addRowBtn"
-                        data-loading-text="Loading..."> <i class="glyphicon glyphicon-plus-sign"></i> Add Row </button>
-
-                    <button type="submit" id="createOrderBtn" data-loading-text="Loading..." class="btn btn-success"><i
-                            class="glyphicon glyphicon-ok-sign"></i> Save Changes</button>
-
-                    <button type="reset" class="btn btn-default" onclick="resetOrderForm()"><i
-                            class="glyphicon glyphicon-erase"></i> Reset</button>
-                </div>
-            </div>
+           
         </form>
 
         {{else if manord}}
@@ -356,8 +349,8 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="subTotal" class="col-sm-3 control-label">Sub Amount</label>
-                    <div class="col-sm-9">
+                    <label for="subTotal" class="col-sm-4 control-label">Sub Amount</label>
+                    <div class="col-sm-8">
                         <input type="text" class="form-control" id="subTotal" name="subTotal" disabled="true"
                             value="{{sub_total}}" />
                         <input type="hidden" class="form-control" id="subTotalValue" name="subTotalValue"
@@ -366,8 +359,8 @@
                 </div>
                 <!--/form-group-->
                 <div class="form-group">
-                    <label for="vat" class="col-sm-3 control-label">VAT 13%</label>
-                    <div class="col-sm-9">
+                    <label for="vat" class="col-sm-4 control-label">VAT 13% </label>
+                    <div class="col-sm-8">
                         <input type="text" class="form-control" id="vat" name="vat" disabled="true"
                             value="{{vat}}" />
                         <input type="hidden" class="form-control" id="vatValue" name="vatValue"
@@ -376,8 +369,8 @@
                 </div>
                 <!--/form-group-->
                 <div class="form-group">
-                    <label for="totalAmount" class="col-sm-3 control-label">Total Amount</label>
-                    <div class="col-sm-9">
+                    <label for="totalAmount" class="col-sm-4 control-label">Total Amount</label>
+                    <div class="col-sm-8">
                         <input type="text" class="form-control" id="totalAmount" name="totalAmount" disabled="true"
                             value="{{total_amount}}" />
                         <input type="hidden" class="form-control" id="totalAmountValue" name="totalAmountValue"
@@ -386,16 +379,19 @@
                 </div>
                 <!--/form-group-->
                 <div class="form-group">
-                    <label for="discount" class="col-sm-3 control-label">Discount</label>
-                    <div class="col-sm-9">
+                    <label for="discount" class="col-sm-4 control-label">Discount <select id="edit_discount_type">
+                        <option value = '1'>%</option>
+                        <option value='2'>Rs</option>
+                    </select></label>
+                    <div class="col-sm-8">
                         <input type="text" class="form-control" id="discount" name="discount" onkeyup="discountFunc()"
                             autocomplete="off" value="{{discount}}" />
                     </div>
                 </div>
                 <!--/form-group-->
                 <div class="form-group">
-                    <label for="grandTotal" class="col-sm-3 control-label">Grand Total</label>
-                    <div class="col-sm-9">
+                    <label for="grandTotal" class="col-sm-4 control-label">Grand Total</label>
+                    <div class="col-sm-8">
                         <input type="text" class="form-control" id="grandTotal" name="grandTotal" disabled="true"
                             value="{{grand_total}}" />
                         <input type="hidden" class="form-control" id="grandTotalValue" name="grandTotalValue"
@@ -408,16 +404,16 @@
 
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="paid" class="col-sm-3 control-label">Paid Amount</label>
-                    <div class="col-sm-9">
+                    <label for="paid" class="col-sm-4 control-label">Paid Amount</label>
+                    <div class="col-sm-8">
                         <input type="text" class="form-control" id="paid" name="paid" autocomplete="off"
                             onkeyup="paidAmount()" value="{{paid}}" />
                     </div>
                 </div>
                 <!--/form-group-->
                 <div class="form-group">
-                    <label for="due" class="col-sm-3 control-label">Due Amount</label>
-                    <div class="col-sm-9">
+                    <label for="due" class="col-sm-4 control-label">Due Amount</label>
+                    <div class="col-sm-8">
                         <input type="text" class="form-control" id="due" name="due" disabled="true"
                             value="{{due}}" />
                         <input type="hidden" class="form-control" id="dueValue" name="dueValue"
@@ -426,8 +422,8 @@
                 </div>
                 <!--/form-group-->
                 <div class="form-group">
-                    <label for="clientContact" class="col-sm-3 control-label">Payment Type</label>
-                    <div class="col-sm-9">
+                    <label for="clientContact" class="col-sm-4 control-label">Payment Type</label>
+                    <div class="col-sm-8">
                         <select class="form-control" name="paymentType" id="paymentType">
                             <option value="">~~SELECT~~</option>
                             <option value="1" <?php if($data[11] == 1) {
@@ -444,8 +440,8 @@
                 </div>
                 <!--/form-group-->
                 <div class="form-group">
-                    <label for="clientContact" class="col-sm-3 control-label">Payment Status</label>
-                    <div class="col-sm-9">
+                    <label for="clientContact" class="col-sm-4 control-label">Payment Status</label>
+                    <div class="col-sm-8">
                         <select class="form-control" name="paymentStatus" id="paymentStatus">
                             <option value="">~~SELECT~~</option>
                              {{#formatPaymentStatus payment_status}}{{/formatPaymentStatus}}
@@ -500,22 +496,22 @@
 
 
                 <div class="form-group">
-                    <label for="due" class="col-sm-3 control-label">Due Amount</label>
-                    <div class="col-sm-9">
+                    <label for="due" class="col-sm-4 control-label">Due Amount</label>
+                    <div class="col-sm-8">
                         <input type="text" class="form-control" id="due" name="due" disabled="true" />
                     </div>
                 </div>
                 <!--/form-group-->
                 <div class="form-group">
-                    <label for="payAmount" class="col-sm-3 control-label">Pay Amount</label>
-                    <div class="col-sm-9">
+                    <label for="payAmount" class="col-sm-4 control-label">Pay Amount</label>
+                    <div class="col-sm-8">
                         <input type="text" class="form-control" id="payAmount" name="payAmount" />
                     </div>
                 </div>
                 <!--/form-group-->
                 <div class="form-group">
-                    <label for="clientContact" class="col-sm-3 control-label">Payment Type</label>
-                    <div class="col-sm-9">
+                    <label for="clientContact" class="col-sm-4 control-label">Payment Type</label>
+                    <div class="col-sm-8">
                         <select class="form-control" name="paymentType" id="paymentType">
                             <option value="">~~SELECT~~</option>
                             <option value="1">Cheque</option>
@@ -526,8 +522,8 @@
                 </div>
                 <!--/form-group-->
                 <div class="form-group">
-                    <label for="clientContact" class="col-sm-3 control-label">Payment Status</label>
-                    <div class="col-sm-9">
+                    <label for="clientContact" class="col-sm-4 control-label">Payment Status</label>
+                    <div class="col-sm-8">
                         <select class="form-control" name="paymentStatus" id="paymentStatus">
                             <option value="">~~SELECT~~</option>
                             <option value="1">Full Payment</option>
@@ -581,4 +577,272 @@
 
 
 <script src="custom/js/order.js"></script>
+<script>
+    var quantity = 0;
+    $('#item_select').select2();
+
+    $('#item_select').on('change',()=>
+    {
+    
+    var selected_product_id= $('#item_select').val();
+    if(selected_product_id > 0)
+    {
+    jQuery.support.cors = true;
+    $.post('api/fetchSelectedProduct',{productId:selected_product_id},function(response){
+        console.log(response);
+        quantity = response.data[0].quantity;
+        $('#available_quantity').text(response.data[0].quantity);
+    })
+    }
+    })
+
+    $(document).on('click','#add_button',(e)=>
+    {
+        e.preventDefault();
+        var product_id= $("#item_select").val();
+        var product_name = $("#item_select option:selected").text();
+        var product_quantity= Number($("#added_quantity").val());
+        var product_rate =  Number($("#item_select option:selected").data('rate'));
+        var product_unit = $("#item_select option:selected").data('unit');
+        var product_total = (product_quantity * product_rate).toFixed(2);
+        console.log(product_id,product_name,product_quantity,product_rate,product_unit,product_total);
+        if(product_quantity <= quantity && product_quantity > 0 )
+        {
+        $('table#productTable').append(`<tr class="row"><td class="col-md-1">${product_id}</td><td>${product_name}</td><td id='edit_quantity' contenteditable>${product_quantity}</td><td>${product_rate}</td><td>${product_total}</td><td><button style="margin-left:10px; border:0; background-color:red;" id="deleterow"><i style="color:white;" class="glyphicon glyphicon-trash"></i></button></td></tr>`)
+        $("#item_select").val('0').change();
+        $('#available_quantity').text(0);
+        $("#added_quantity").val('');
+        count_quantity();
+        count_total();
+        calculate_function();
+        }
+        else
+        {
+            alert(`We donot have ${product_quantity} ${product_name} in the stock`);
+        }
+    })
+
+   const count_quantity = () =>
+   {
+       var total_quantity = 0;
+       var tr_length =  $("table#productTable tr:gt(0)").length;
+       console.log(tr_length);
+       if(tr_length>0)
+       {
+       $("table#productTable tr:gt(0)").each((index,result)=>
+       {
+           console.log("index is",index);
+         
+        total_quantity += Number($(result).find('td').eq(2).text());
+          if(tr_length === index+1)
+           {
+               $('#total_quantity').text(total_quantity);
+           }
+          
+       })
+       }
+       else
+       {
+               $('#total_quantity').text('0.00');
+       }
+   }
+
+   
+   
+   const count_total = () =>
+   {
+ var total_amount = 0;
+       var tr_length =  $("table#productTable tr:gt(0)").length;
+       if(tr_length>0)
+       {
+       $("table#productTable tr:gt(0)").each((index,result)=>
+       {
+          
+        total_amount += Number($(result).find('td').eq(4).text());
+           if(tr_length === index + 1)
+           {
+               $('#total_amount').text(total_amount.toFixed(2));
+              
+               $('#subTotal').val(total_amount.toFixed(2));
+           }
+       })
+       }
+       else
+       {
+            $('#total_amount').text('0.00');
+             $('#subTotal').val('0.00');
+       }
+   }
+const calculate_total = (e)=>
+{
+var discount_type = $('#discount_type').val();
+console.log(discount_type);
+    var taxable_amount =0;
+    var discount_value = Number($('#add_discount').val()).toFixed(2);
+    if(Number($('#subTotal').val())>0)
+    {
+    if(discount_type === '1')
+    {
+        taxable_amount = Number($('#subTotal').val()).toFixed(2) - (Number($('#subTotal').val()).toFixed(2) * discount_value)/100; 
+        $('#totalAmount').val(taxable_amount.toFixed(2));
+    }
+    else
+    {
+ taxable_amount = Number($('#subTotal').val()).toFixed(2) - Number(discount_value).toFixed(2);
+    $('#totalAmount').val(taxable_amount.toFixed(2))
+
+    }
+    }
+    else
+    {
+       $('#totalAmount').val('0.00');
+       $('#add_discount').val('0.00'); 
+    }
+}
+
+const calculate_grand_total = () =>
+{
+
+    if($('#vat_checkbox').prop('checked'))
+  {
+      
+      $('#add_grandtotal').val(Number(Number($('#totalAmount').val())+Number($('#add_vat').val())).toFixed(2));
+  }
+  else
+  {
+      $('#add_grandtotal').val(Number($('#totalAmount').val()).toFixed(2));
+  }
+}
+const vat_checked = () =>
+{
+
+ if($('#vat_checkbox').prop('checked'))
+  {
+          
+     $('#add_vat').val(Number(Number($('#totalAmount').val()).toFixed(2) * 0.13).toFixed(2)); 
+     
+  }
+  else
+  {
+       $('#add_vat').val('0.00'); 
+  }
+}
+const vat_checkbox_change = () =>
+{
+ if($('#vat_checkbox').prop('checked'))
+  {
+          
+     $('#add_vat').val(Number(Number($('#totalAmount').val()).toFixed(2) * 0.13).toFixed(2)); 
+  }
+  else
+  {
+       $('#add_vat').val('0.00'); 
+  }
+}
+$('#vat_checkbox').on('change',()=>
+{
+vat_checkbox_change();
+calculate_grand_total();
+calculate_dueamount();
+})
+
+$('#add_paidamount').on('keyup',()=>
+{
+calculate_function();
+})
+const calculate_dueamount = () =>
+{
+$('#add_dueamount').val(Number(eval($('#add_grandtotal').val()-$('#add_paidamount').val())).toFixed(2));
+}
+const calculate_function = () =>
+{
+ calculate_total();
+ vat_checked();
+ calculate_grand_total();
+ calculate_dueamount();
+}
+$('#discount_type').on('change',(e)=>
+{
+calculate_function();
+})
+$('#add_discount').on('keyup',(e)=>
+{
+calculate_function();
+})
+
+$(document).on('click','#deleterow',(e)=>
+{
+    e.preventDefault();
+    console.log("hello");
+    $('#deleterow').closest('tr').remove();
+       count_quantity();
+        count_total();
+    calculate_function();
+})
+
+$(document).on('keyup','#edit_quantity',(e)=>
+{
+    var product_quantity = $('#edit_quantity').text();
+    console.log(product_quantity);
+    var product_rate = $('#edit_quantity').next('td').text();
+    console.log(product_rate);
+    var product_total = (product_quantity * product_rate).toFixed(2);   
+    $('#edit_quantity').next('td').next('td').text(product_total);
+    console.log(product_total);
+    count_quantity();
+    count_total();
+    calculate_function();
+})
+
+$('#saveorder').on('click',(e)=>
+{
+var vat_status = $("#vat_checkbox").prop('checked') ? 1 : 0;
+var discount_type = $("#discount_type").val();
+var order_data = {order_date:$('#invoice_date').val(),client_name:$('#client_name').val(),client_contact:$("#client_contact").val(),invoice_no:$('#invoice_no').val(),sub_total:$("#subTotal").val(),vat:$('#add_vat').val(),total_amount:$('#totalAmount').val(),discount:$('#add_discount').val(),grand_total:$('#add_grandtotal').val(),paid:$('#add_paidamount').val(),due:$('#add_dueamount').val(),payment_type:$('#add_payment_type').val(),payment_status:$('#add_payment_status').val(),order_status:1,total_quantity:$('#total_quantity').text(),vat_status:vat_status,discount_type:discount_type}
+
+var tr_length =  $("table#productTable tr:gt(0)").length;
+var order_item_data = [];
+var product_quantity = [];
+       if(tr_length>0)
+       {
+           
+       $("table#productTable tr:gt(0)").each((index,result)=>
+       {
+          
+        order_item_data.push({invoice_no:$('#invoice_no').val(),product_id:$(result).find('td').eq(0).text(),quantity:$(result).find('td').eq(2).text(),rate:$(result).find('td').eq(3).text(),total:$(result).find('td').eq(4).text(),order_item_status:1});
+        product_quantity.push({product_id:$(result).find('td').eq(0).text(),quantity:$(result).find('td').eq(2).text()})
+           if(tr_length === index + 1)
+           {
+               $.post('api/addOrder',({order_data:order_data,order_item_data:order_item_data,product_quantity:product_quantity}),(response)=>
+               {
+                   console.log(response);
+                   if(response.success)
+                   {
+                       setTimeout(()=>
+                       {
+                       alert("Added successfully")},2000)
+                       
+                   
+                                             
+
+                   }
+                   else
+                   {
+                       alert("Some error occured");
+                   }
+               })
+
+           }
+       })
+       }
+       else
+       {
+           alert("Please add item(s) to make sales");
+       }
+
+})
+$('#invoice_no').val(Math.random().toString().slice(2,11));
+var a = new Date().toISOString().split('T')[0]
+$('#invoice_date').val(a);
+</script>
 

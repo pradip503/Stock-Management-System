@@ -30,6 +30,8 @@ router.post('/removeProduct', products.removeProduct);
 router.get('/fetchOrders', orders.fetchOrders);
 router.post('/addOrder', orders.createOrder);
 router.post('/fetchProductData', orders.fetchProductData);
-
+router.post('/fetchOrderItem',orders.fetchOrderItem);
+router.post('/editOrder',orders.editOrder);
+router.post('/fetchOrdersByDate',orders.fetchOrdersByDate);
 
 module.exports = router;

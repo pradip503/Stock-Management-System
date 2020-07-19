@@ -1,4 +1,6 @@
+
 var mysql      = require('mysql');
+
 
 var connection = mysql.createConnection({
   host     : 'localhost',
@@ -10,6 +12,7 @@ var connection = mysql.createConnection({
  
 connection.connect((error) => {
     if(error){
+      console.log(error);
         console.log('Problem in dabatabase connection.');
     } else{
       console.log('Connection established!');

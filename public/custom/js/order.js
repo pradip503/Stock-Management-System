@@ -230,7 +230,7 @@ $(document).ready(function () {
 					  <td>${order.order_date}</td>
 					  <td>${order.client_name}</td>
 					  <td>${order.client_contact}</td>
-					<td>${order.totalOrder}</td>
+					<td>${order.total_quantity}</td>
 					<td>`+ $paymentStatus + `</td>
 					<td>` + $button + `</td>
 				  </tr>

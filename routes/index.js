@@ -30,6 +30,42 @@ router.get('/product', function (req, res, next) {
 });
 
 /* GET order page. */
+router.get('/orderedit',(req,res,next)=>
+{
+    const invoice_no = req.query['id'];
+    console.log(invoice_no);
+    Promise.all([fetchOrderDetails(invoice_no),fetchOrderedItemDetails(invoice_no),fetchAllProducts()])
+    .then(data => {
+      let orderDetails = data[0];
+      let orderItemDetails = data[1];
+      let allProductLists = data[2];
+      
+      console.log(allProductLists);
+      
+      res.render('website/orderedit', {
+        orderDetails: orderDetails,
+        orderItemDetails: orderItemDetails,
+        allProductLists: allProductLists,
+        invoice_no:invoice_no
+      })
+    })
+    .catch(error => {
+      console.log(error)
+      res.render('website/orders', {
+        edit: true,
+        error: 'Unable to fetch details!'
+      })
+    })
+
+    
+
+  })
+
+router.get('/ordermanage',(req,res,next)=>
+{
+    res.render('website/ordermanage');
+  
+})
 router.get('/order', function (req, res, next) {
   var page = req.query['o'];
   if (page == "add") {
@@ -53,7 +89,7 @@ router.get('/order', function (req, res, next) {
     let orderId  = req.query['i'];
 
     // call promises here
-    Promise.all([fetchOrderDetails(orderId),fetchOderedItemDetails(orderId),fetchAllProducts()])
+    Promise.all([fetchOrderDetails(orderId),fetchOrderedItemDetails(orderId),fetchAllProducts()])
     .then(data => {
       let orderDetails = data[0];
       let orderItemDetails = data[1];
@@ -101,12 +137,26 @@ module.exports = router;
 
 
 //Promise to fetch order details during edit order
-function fetchOrderDetails(orderId){
+function fetchOrderDetails(invoice_no){
   return new Promise((resolve, reject) => {
-    let fetchOrderDetails = "SELECT order_id, order_date, client_name, client_contact, sub_total, vat, total_amount, discount, grand_total, paid, due, payment_type, payment_status FROM orders "+
-    "WHERE order_id = ?";
+    let fetchOrderDetails = `SELECT * from orders WHERE invoice_no = ?`;
 
-    db.query(fetchOrderDetails, [orderId], (error, results) => {
+    db.query(fetchOrderDetails, [invoice_no], (error, results) => {
+      if(results){
+        resolve(results);
+      } else {
+        reject(error);
+      } 
+    });
+
+  });
+};
+
+function fetchOrderDetails1(orderId){
+  return new Promise((resolve, reject) => {
+    let fetchOrderDetails = `SELECT *  FROM orders `;
+
+    db.query(fetchOrderDetails, (error, results) => {
       if(results){
         resolve(results);
       } else {
@@ -118,12 +168,11 @@ function fetchOrderDetails(orderId){
 };
 
 //promise to fetch order item details required during edit order
-function fetchOderedItemDetails(orderId){
+function fetchOrderedItemDetails(invoiceno){
   return new Promise((resolve, reject) => {
-    let fetchOrderItemDetails = "SELECT order_item_id, order_id, product_id, quantity, rate, total FROM order_item " +
-    "WHERE order_id = ?";
+    let fetchOrderItemDetails = `SELECT order_item.quantity as order_quantity,product.product_name,product.product_id,product.rate,total from order_item inner join product on order_item.product_id = product.product_id WHERE invoice_no = ?`;
 
-    db.query(fetchOrderItemDetails, [orderId], (error, itemDetails) => {
+    db.query(fetchOrderItemDetails, [invoiceno], (error, itemDetails) => {
       if(itemDetails){
         resolve(itemDetails);
       } else {
@@ -141,6 +190,7 @@ function fetchAllProducts(){
 
     db.query(fetchAllProducts, [1,1,0], (error, allProducts) => {
       if(allProducts){
+     
         resolve(allProducts);
       } else {
         reject(error);
