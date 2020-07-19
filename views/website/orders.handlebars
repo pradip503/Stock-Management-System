@@ -426,15 +426,9 @@
                     <div class="col-sm-8">
                         <select class="form-control" name="paymentType" id="paymentType">
                             <option value="">~~SELECT~~</option>
-                            <option value="1" <?php if($data[11] == 1) {
-				      		echo "selected";
-				      	} ?>>Cheque</option>
-                            <option value="2" <?php if($data[11] == 2) {
-				      		echo "selected";
-				      	} ?>>Cash</option>
-                            <option value="3" <?php if($data[11] == 3) {
-				      		echo "selected";
-				      	} ?>>Credit Card</option>
+                            <option value="1" {{#formatPaymentType payment_type}} {{#if cheque}} selected {{/if}}{{/formatPaymentType}}>Cheque</option>
+                            <option value="2" {{#formatPaymentType payment_type}} {{#if cash}} selected {{/if}}{{/formatPaymentType}}>Cash</option>
+                            <option value="3" {{#formatPaymentType payment_type}} {{#if credit_card}} selected {{/if}}{{/formatPaymentType}}>Credit Card</option>
                         </select>
                     </div>
                 </div>

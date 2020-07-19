@@ -4,6 +4,8 @@ var brands = require('../services/brand');
 var categories = require('../services/category');
 var products = require('../services/product');
 var orders = require('../services/order');
+var dashboard = require('../services/dashboard');
+var report = require('../services/report');
 
 /* BRAND'S API. */
 router.get('/fetchBrands', brands.fetchBrands);
@@ -33,5 +35,17 @@ router.post('/fetchProductData', orders.fetchProductData);
 router.post('/fetchOrderItem',orders.fetchOrderItem);
 router.post('/editOrder',orders.editOrder);
 router.post('/fetchOrdersByDate',orders.fetchOrdersByDate);
+
+/*DASHBOARD'S API*/
+router.get('/getTotalOrders', dashboard.countTotalOrders);
+router.get('/getTotalProducts', dashboard.countTotalProducts);
+router.get('/getLowStock', dashboard.countLowStock);
+router.get('/getTotalUnitsSold', dashboard.getTotalUnitsSold);
+router.get('/getTotalRevenue', dashboard.getTotalRevenue);
+router.get('/getTotalCashReceived', dashboard.getTotalPaid);
+
+/*REPORT'S API*/
+router.post('/generateReport', report.generateReport);
+
 
 module.exports = router;

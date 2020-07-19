@@ -26,6 +26,16 @@ module.exports = {
         return value + 1;
     },
 
+    formatPaymentType: function(payment_type){
+        if(payment_type == 1) {
+            return {cheque: true}
+        } else if(payment_type == 2){
+            return {cash: true}
+        } else if(payment_type == 3){
+            return {creadit_card: true}
+        }
+    },
+
     formatPaymentStatus: function (payment_status) {
 
         let paymentOptions= [{'full_payment':1}, {'advance_payment':2}, {'no_payment':3}];
