@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var brands = require('../services/brand');
+var units = require('../services/unit');
 var categories = require('../services/category');
 var products = require('../services/product');
 var orders = require('../services/order');
@@ -13,6 +14,13 @@ router.post('/addBrand', brands.insertBrand);
 router.post('/fetchSelectedBrand', brands.fetchSelectedBrand);
 router.post('/editBrand', brands.editBrand);
 router.post('/removeBrand', brands.removeBrand);
+
+/* UNIT'S API. */
+router.get('/fetchUnits', units.fetchUnits);
+router.post('/addUnit', units.insertUnit);
+router.post('/fetchSelectedUnit', units.fetchSelectedUnit);
+router.post('/editUnit', units.editUnit);
+router.post('/removeUnit', units.removeUnit);
 
 /* CATEGORY'S API. */
 router.get('/fetchCategories', categories.fetchCategories);

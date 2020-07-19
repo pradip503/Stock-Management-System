@@ -19,6 +19,11 @@ router.get('/brand', function (req, res, next) {
   res.render('website/brand');
 });
 
+/* GET unit page. */
+router.get('/unit', function (req, res, next) {
+  res.render('website/unit');
+});
+
 /* GET category page. */
 router.get('/category', function (req, res, next) {
   res.render('website/category');
