@@ -45,18 +45,20 @@ module.exports = {
 
         var fetchSelectedProduct = "SELECT product_id, product_name,product_unit, brand_id, categories_id, quantity, rate, active, status FROM product WHERE product_id = ?";
         db.query(fetchSelectedProduct, [req.body.productId], (error, results) => {
+            console.log(results);
             if(error){
 
                 res.send({
                     'success': false,
-                    "messages": "Problem fetching selected product!"
+                    "messages": "Problem fetching selected product!",
+                   
                 });
 
             } else {
                 res.send({
                     'success': true,
                     "messages": "Selected product fetched successfully!",
-                    data: results[0]
+                    "data": results
                 });
             }
         });

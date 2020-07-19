@@ -94,7 +94,7 @@
 						<label for="brandName" class="col-sm-3 control-label">Brand Name: </label>
 						<label class="col-sm-1 control-label">: </label>
 						<div class="col-sm-8">
-							<select class="form-control" id="brandName" name="brandName">
+							<select style="width: 370px;" class="form-control" id="brandName" name="brandName">
 
 
 							</select>
@@ -116,7 +116,7 @@
 						<label for="categoryName" class="col-sm-3 control-label">Category Name: </label>
 						<label class="col-sm-1 control-label">: </label>
 						<div class="col-sm-8">
-							<select type="text" class="form-control" id="categoryName" placeholder="Product Name"
+							<select style="width: 370px;" type="text" class="form-control" id="categoryName" placeholder="Product Name"
 								name="categoryName">
 								<option value="">~~SELECT~~</option>
 
@@ -128,7 +128,7 @@
 						<label for="productStatus" class="col-sm-3 control-label">Status: </label>
 						<label class="col-sm-1 control-label">: </label>
 						<div class="col-sm-8">
-							<select class="form-control" id="productStatus" name="productStatus">
+							<select style="width: 370px;" class="form-control" id="productStatus" name="productStatus">
 								<option value="">~~SELECT~~</option>
 								<option value="1">Available</option>
 								<option value="2">Not Available</option>
@@ -208,7 +208,7 @@
 								<label for="editBrandName" class="col-sm-3 control-label">Brand Name: </label>
 								<label class="col-sm-1 control-label">: </label>
 								<div class="col-sm-8">
-									<select class="form-control" id="editBrandName" name="editBrandName">
+									<select style="width: 370px;" class="form-control" id="editBrandName" name="editBrandName">
 										<option value="">~~SELECT~~</option>
 
 									</select>
@@ -230,7 +230,7 @@
 								<label for="editCategoryName" class="col-sm-3 control-label">Category Name: </label>
 								<label class="col-sm-1 control-label">: </label>
 								<div class="col-sm-8">
-									<select type="text" class="form-control" id="editCategoryName"
+									<select style="width: 370px;" type="text" class="form-control" id="editCategoryName"
 										name="editCategoryName">
 										<option value="">~~SELECT~~</option>
 
@@ -242,7 +242,7 @@
 								<label for="editProductStatus" class="col-sm-3 control-label">Status: </label>
 								<label class="col-sm-1 control-label">: </label>
 								<div class="col-sm-8">
-									<select class="form-control" id="editProductStatus" name="editProductStatus">
+									<select style="width: 370px;" class="form-control" id="editProductStatus" name="editProductStatus">
 										<option value="">~~SELECT~~</option>
 										<option value="1">Available</option>
 										<option value="2">Not Available</option>
@@ -302,3 +302,14 @@
 
 
 <script src="custom/js/product.js"></script>
+<script>
+	$("#editCategoryName").select2();
+	$("#editBrandName").select2();
+	$("#editProductStatus").select2();
+
+$("#categoryName").select2();
+	$("#brandName").select2();
+	$("#productStatus").select2();
+
+
+</script>

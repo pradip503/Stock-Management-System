@@ -1,0 +1,195 @@
+<div class='div-request div-hide'>manord</div>
+<div class="panel panel-default">
+    <div class="panel-heading">        
+        <i class="glyphicon glyphicon-edit"></i> Manage Order
+    </div>
+    <div class="panel-body">
+		<div class="row">
+			<div class="col-md-4 text-center">
+				<p>Search<br>
+				<input id="search_data" onkeyup="filterData()"  style="border: 1px solid aqua; margin-top: 3px; height: 30px;text-align: center;" type="search">
+
+				</p>
+			</div>
+			<div class="col-md-2 text-center">
+				<p>Start Date
+					<br>
+			<input id="start_date" style="border: 1px solid aqua; height: 35px;text-align: center;" type="date">
+
+				</p>
+
+			</div>
+			<div class="col-md-2 text-center">
+				<p>End Date
+					<br>
+			<input id="end_date" style="border: 1px solid aqua; height: 35px;text-align: center;" type="date">
+
+				</p>
+
+			</div>
+			<div style="margin-top: 18px;">
+				<button onclick="loadOrdersByDate()" class="btn" style="outline: none;background-color:aqua;color: white;">Search</button>
+			</div>
+		</div>
+           <table class="table" id="manageOrderTable">
+            <thead>
+                <tr>
+                    <th>Invoice No</th>
+                    <th>Order Date</th>
+                    <th>Client Name</th>
+                    <th>Contact</th>
+                    <th>Grand Total</th>
+                    <th>Payment Status</th>
+                    <th>Option</th>
+                </tr>
+            </thead>
+            <tbody id="manageOrderTableBody">
+                    
+            </tbody>
+        </table>
+    </div>
+    </div>
+    
+    <script>
+        loadOrders();
+
+		function loadOrders() {
+
+			$paymentStatus = "";
+
+			$.ajax({
+				url: "/api/fetchOrders",
+				type: 'GET',
+				dataType: 'json',
+				success: function (response) {
+                  
+					let ordersArray = response.data;
+                
+					// empties the table before loading new data
+					$('#manageOrderTableBody').html('');
+
+					ordersArray.forEach((order, i) => {
+
+						// active 
+						if (order.payment_status == 'Full Payment') {
+							$paymentStatus = "<label class='label label-success'>Full Payment</label>";
+						} else if (order.payment_status == 'Advance Payment') {
+							$paymentStatus = "<label class='label label-info'>Advance Payment</label>";
+						} else {
+							$paymentStatus = "<label class='label label-warning'>No Payment</label>";
+						} // /else
+
+						$button = `<!-- Single button -->
+						<div class="btn-group">
+						  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Action <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu">
+							<li><a href="orderedit?id=${order.invoice_no}" id="editOrderModalBtn"> <i class="glyphicon glyphicon-edit"></i> Edit</a></li>
+							
+							<li><a type="button" data-toggle="modal" id="paymentOrderModalBtn" data-target="#paymentOrderModal" onclick="paymentOrder(${order.order_id})"> <i class="glyphicon glyphicon-save"></i> Payment</a></li>
+					
+							<li><a type="button" onclick="printOrder(${order.order_id})"> <i class="glyphicon glyphicon-print"></i> Print </a></li>
+							
+							<li><a type="button" data-toggle="modal" data-target="#removeOrderModal" id="removeOrderModalBtn" onclick="removeOrder(${order.order_id})"> <i class="glyphicon glyphicon-trash"></i> Remove</a></li>       
+						  </ul>
+						</div>`;
+
+						$('#manageOrderTableBody').append(`
+				  <tr>
+					  <td>${order.invoice_no}</td>
+					  <td>${order.order_date}</td>
+					  <td>${order.client_name}</td>
+					  <td>${order.client_contact}</td>
+					<td>${order.grand_total}</td>
+					<td>`+ $paymentStatus + `</td>
+					<td>` + $button + `</td>
+				  </tr>
+				`);
+					});
+
+				},
+				error: function (error) {
+					console.log(error);
+					alert("Error in loading data");
+				}
+			});
+		}
+
+		function loadOrdersByDate() {
+
+			$paymentStatus = "";
+	if($('#start_date').val() && $('#end_date').val())
+	{
+			$.post("/api/fetchOrdersByDate",{start_date:$('#start_date').val(),end_date:$('#end_date').val()},
+				(response) =>{
+            
+
+					if(response.success)
+					{
+					let ordersArray = response.data;
+                   
+					// empties the table before loading new data
+					$('#manageOrderTableBody').html('');
+
+					ordersArray.forEach((order, i) => {
+
+						// active 
+						if (order.payment_status == 'Full Payment') {
+							$paymentStatus = "<label class='label label-success'>Full Payment</label>";
+						} else if (order.payment_status == 'Advance Payment') {
+							$paymentStatus = "<label class='label label-info'>Advance Payment</label>";
+						} else {
+							$paymentStatus = "<label class='label label-warning'>No Payment</label>";
+						} // /else
+
+						$button = `<!-- Single button -->
+						<div class="btn-group">
+						  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Action <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu">
+							<li><a href="orderedit?id=${order.invoice_no}" id="editOrderModalBtn"> <i class="glyphicon glyphicon-edit"></i> Edit</a></li>
+							
+							<li><a type="button" data-toggle="modal" id="paymentOrderModalBtn" data-target="#paymentOrderModal" onclick="paymentOrder(${order.order_id})"> <i class="glyphicon glyphicon-save"></i> Payment</a></li>
+					
+							<li><a type="button" onclick="printOrder(${order.order_id})"> <i class="glyphicon glyphicon-print"></i> Print </a></li>
+							
+							<li><a type="button" data-toggle="modal" data-target="#removeOrderModal" id="removeOrderModalBtn" onclick="removeOrder(${order.order_id})"> <i class="glyphicon glyphicon-trash"></i> Remove</a></li>       
+						  </ul>
+						</div>`;
+
+						$('#manageOrderTableBody').append(`
+				  <tr>
+					  <td>${order.invoice_no}</td>
+					  <td>${order.order_date}</td>
+					  <td>${order.client_name}</td>
+					  <td>${order.client_contact}</td>
+					<td>${order.grand_total}</td>
+					<td>`+ $paymentStatus + `</td>
+					<td>` + $button + `</td>
+				  </tr>
+				`);
+					});
+					}
+					else
+					{
+						alert("Error occured");
+					}
+				});
+		}
+		else
+		{
+			alert("Please select date");
+		}
+		}
+
+		function filterData()
+		{
+			 var value = $("#search_data").val().toLowerCase();
+		  $("table tr:gt(0)").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+		}
+
+    </script>

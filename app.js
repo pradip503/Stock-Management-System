@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var bodyparser= require('body-parser');
 var exphs = require('express-handlebars');
 
 // routes
@@ -15,8 +16,8 @@ var {formatProductOptions, increment, formatPaymentType ,formatPaymentStatus} = 
 var app = express();
 
 // app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -25,6 +26,9 @@ app.set('view engine', 'handlebars');
 app.engine('handlebars', exphs({defaultLayout: 'index',helpers: {formatProductOptions, increment, formatPaymentStatus,formatPaymentType}}));
 
 
+// app.use(bodyParser.urlencoded({extended: false}))
+app.use(express.json());
+app.use(express.urlencoded({ extended:true }));
 app.use('/', indexRouter);
 app.use('/api', usersRouter);
 
