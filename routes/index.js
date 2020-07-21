@@ -4,43 +4,46 @@ var db = require('../config/db');
 const { connect } = require('../config/db');
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
+router.get('/', checkIfNotAuthenticated, function (req, res, next) {
   res.render('website/login');
 });
 
 /* GET dashboard page. */
-router.get('/dashboard', function (req, res, next) {
+router.get('/dashboard',checkIfAuthenticated, function (req, res, next) {
   res.render('website/dashboard');
 });
 
 
 /* GET brand page. */
-router.get('/brand', function (req, res, next) {
+router.get('/brand',checkIfAuthenticated,  function (req, res, next) {
   res.render('website/brand');
 });
 
+/* GET unit page. */
+router.get('/unit',checkIfAuthenticated, function (req, res, next) {
+  res.render('website/unit');
+});
+
 /* GET category page. */
-router.get('/category', function (req, res, next) {
+router.get('/category',checkIfAuthenticated, function (req, res, next) {
   res.render('website/category');
 });
 
 /* GET product page. */
-router.get('/product', function (req, res, next) {
+router.get('/product',checkIfAuthenticated, function (req, res, next) {
   res.render('website/product');
 });
 
 /* GET order page. */
-router.get('/orderedit',(req,res,next)=>
+router.get('/orderedit',checkIfAuthenticated,(req,res,next)=>
 {
     const invoice_no = req.query['id'];
-    console.log(invoice_no);
+    
     Promise.all([fetchOrderDetails(invoice_no),fetchOrderedItemDetails(invoice_no),fetchAllProducts()])
     .then(data => {
       let orderDetails = data[0];
       let orderItemDetails = data[1];
       let allProductLists = data[2];
-      
-      console.log(allProductLists);
       
       res.render('website/orderedit', {
         orderDetails: orderDetails,
@@ -61,12 +64,12 @@ router.get('/orderedit',(req,res,next)=>
 
   })
 
-router.get('/ordermanage',(req,res,next)=>
+router.get('/ordermanage',checkIfAuthenticated,(req,res,next)=>
 {
     res.render('website/ordermanage');
   
 })
-router.get('/order', function (req, res, next) {
+router.get('/order',checkIfAuthenticated, function (req, res, next) {
   var page = req.query['o'];
   if (page == "add") {
 
@@ -75,7 +78,6 @@ router.get('/order', function (req, res, next) {
 
       res.render('website/orders', {
         add: true,
-        numbers: [1,2,3],
         products: results
       });
 
@@ -95,7 +97,6 @@ router.get('/order', function (req, res, next) {
       let orderItemDetails = data[1];
       let allProductLists = data[2];
       
-      console.log(orderDetails);
       
       res.render('website/orders', {
         editOrd: true,
@@ -118,20 +119,37 @@ router.get('/order', function (req, res, next) {
 });
 
 /* GET report page. */
-router.get('/report', function (req, res, next) {
+router.get('/report',checkIfAuthenticated, function (req, res, next) {
   res.render('website/report');
 });
 
 /* GET setting page. */
-router.get('/setting', function (req, res, next) {
+router.get('/setting',checkIfAuthenticated, function (req, res, next) {
   res.render('website/setting');
 });
 
 /* GET report page. */
 router.get('/logout', function (req, res, next) {
   // do logout stuffs and return to login page
-  res.redirect('/')
+  req.logOut();
+  res.redirect('/');
 });
+
+function checkIfAuthenticated(req, res, next){
+  if(req.isAuthenticated()){
+    return next()
+  }
+
+  res.redirect('/');
+};
+
+function checkIfNotAuthenticated(req, res, next){
+  if(req.isAuthenticated()){
+    res.redirect('/')
+  }
+
+  return next();
+}
 
 module.exports = router;
 

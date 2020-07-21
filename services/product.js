@@ -5,7 +5,7 @@ module.exports = {
 
     fetchProducts: function(req, res) {
 
-        var fetchProduct = "SELECT product.product_id, product.product_name, product.brand_id,"+
+        var fetchProduct = "SELECT product.product_id, product.product_name,product.product_unit, product.brand_id,"+
         "product.categories_id, product.quantity, product.rate, product.active, product.status," +
         "brands.brand_name, categories.categories_name FROM product "+
         "INNER JOIN brands ON product.brand_id = brands.brand_id "+
@@ -20,10 +20,10 @@ module.exports = {
 
     insertProduct: function(req, res){
 
-        var insertProduct = "INSERT INTO product (product_name, brand_id, categories_id, quantity, rate, active, status) " +
-        "VALUES (?, ?, ?, ?, ?, ?, 1)";
+        var insertProduct = "INSERT INTO product (product_name,product_unit, brand_id, categories_id, quantity, rate, active, status) " +
+        "VALUES (?,?, ?, ?, ?, ?, ?, 1)";
 
-        db.query(insertProduct,[req.body.productName, req.body.brandName, req.body.categoryName, req.body.quantity, req.body.rate, req.body.productStatus, 1], (error, results) => {
+        db.query(insertProduct,[req.body.productName,req.body.unitName, req.body.brandName, req.body.categoryName, req.body.quantity, req.body.rate, req.body.productStatus, 1], (error, results) => {
             if(error){
 
                 res.send({
@@ -32,6 +32,7 @@ module.exports = {
                 });
 
             } else {
+               
                 res.send({
                     'success': true,
                     "messages": "Product added successfully!"
@@ -42,8 +43,7 @@ module.exports = {
 
     fetchSelectedProduct: function(req, res) {
 
-        console.log(req.body.productId);
-        var fetchSelectedProduct = "SELECT product_id, product_name, brand_id, categories_id, quantity, rate, active, status FROM product WHERE product_id = ?";
+        var fetchSelectedProduct = "SELECT product_id, product_name,product_unit, brand_id, categories_id, quantity, rate, active, status FROM product WHERE product_id = ?";
         db.query(fetchSelectedProduct, [req.body.productId], (error, results) => {
             console.log(results);
             if(error){
@@ -66,8 +66,8 @@ module.exports = {
 
     editProduct: function(req, res) {
 
-        var editProduct  = "UPDATE product SET product_name = ?, brand_id = ?, categories_id = ?, quantity = ?, rate = ?, active = ?, status = ? WHERE product_id = ? ";
-        db.query(editProduct, [req.body.editProductName, req.body.editBrandName, req.body.editCategoryName, req.body.editQuantity, req.body.editRate, req.body.editProductStatus, 1, req.body.productId], (error, results) => {
+        var editProduct  = "UPDATE product SET product_name = ?, product_unit = ?, brand_id = ?, categories_id = ?, quantity = ?, rate = ?, active = ?, status = ? WHERE product_id = ? ";
+        db.query(editProduct, [req.body.editProductName,req.body.editUnitName, req.body.editBrandName, req.body.editCategoryName, req.body.editQuantity, req.body.editRate, req.body.editProductStatus, 1, req.body.productId], (error, results) => {
             if(error){
 
                 res.send({
