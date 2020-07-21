@@ -4,6 +4,7 @@ $(document).ready(function () {
 	// top nav bar 
 	$('#navProduct').addClass('active');
 	// manage product data table
+	// $('#manageProductTable').DataTable();
 	loadProducts();
 
 	// add product modal btn clicked

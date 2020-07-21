@@ -36,8 +36,10 @@
 
 <body>
 
+    {{#if login}}
     {{> header }}
-
+    {{/if}}
+    
     <div class="container">
         {{{ body }}}
     </div>
