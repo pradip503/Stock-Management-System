@@ -64,4 +64,16 @@ function checkIfAuthenticated(req, res, next){
   };
 
 
+/*DASHBOARD'S API*/
+router.get('/getTotalOrders', dashboard.countTotalOrders);
+router.get('/getTotalProducts', dashboard.countTotalProducts);
+router.get('/getLowStock', dashboard.countLowStock);
+router.get('/getTotalUnitsSold', dashboard.getTotalUnitsSold);
+router.get('/getTotalRevenue', dashboard.getTotalRevenue);
+router.get('/getTotalCashReceived', dashboard.getTotalPaid);
+
+/*REPORT'S API*/
+router.post('/generateReport', report.generateReport);
+
+
 module.exports = router;
