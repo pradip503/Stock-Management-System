@@ -1,16 +1,16 @@
-$(document).ready(function() {
+$(document).ready(function () {
 	// main menu
 	$("#navSetting").addClass('active');
 	// sub manin
 	$("#topNavSetting").addClass('active');
 
 	// change username
-	$("#changeUsernameForm").unbind('submit').bind('submit', function() {
+	$("#changeUsernameForm").unbind('submit').bind('submit', function () {
 		var form = $(this);
 
 		var username = $("#username").val();
 
-		if(username == "") {
+		if (username == "") {
 			$("#username").after('<p class="text-danger">Username field is required</p>');
 			$("#username").closest('.form-group').addClass('has-error');
 		} else {
@@ -25,7 +25,7 @@ $(document).ready(function() {
 				type: form.attr('method'),
 				data: form.serialize(),
 				dataType: 'json',
-				success:function(response) {
+				success: function (response) {
 
 					$("#changeUsernameBtn").button('reset');
 					// remove text-error 
@@ -33,31 +33,36 @@ $(document).ready(function() {
 					// remove from-group error
 					$(".form-group").removeClass('has-error').removeClass('has-success');
 
-					if(response.success == true)  {												
-																
+					if (response.success == true) {
+
 						// shows a successful message after operation
-						$('.changeUsenrameMessages').html('<div class="alert alert-success">'+
-	            '<button type="button" class="close" data-dismiss="alert">&times;</button>'+
-	            '<strong><i class="glyphicon glyphicon-ok-sign"></i></strong> '+ response.messages +
-	          '</div>');
+						$('.changeUsenrameMessages').html('<div class="alert alert-success">' +
+							'<button type="button" class="close" data-dismiss="alert">&times;</button>' +
+							'<strong><i class="glyphicon glyphicon-ok-sign"></i></strong> ' + response.messages +
+							'</div>');
 
 						// remove the mesages
-	          $(".alert-success").delay(500).show(10, function() {
-							$(this).delay(3000).hide(10, function() {
+						$(".alert-success").delay(500).show(10, function () {
+							$(this).delay(3000).hide(10, function () {
 								$(this).remove();
 							});
-						}); // /.alert	          					
+						}); // /.alert	    
 						
+						setInterval(() => {
+							window.location.replace('/logout');
+						},1000);
+						
+
 					} else {
 						// shows a successful message after operation
-						$('.changeUsenrameMessages').html('<div class="alert alert-warning">'+
-	            '<button type="button" class="close" data-dismiss="alert">&times;</button>'+
-	            '<strong><i class="glyphicon glyphicon-exclamation-sign"></i></strong> '+ response.messages +
-	          '</div>');
+						$('.changeUsenrameMessages').html('<div class="alert alert-warning">' +
+							'<button type="button" class="close" data-dismiss="alert">&times;</button>' +
+							'<strong><i class="glyphicon glyphicon-exclamation-sign"></i></strong> ' + response.messages +
+							'</div>');
 
 						// remove the mesages
-	          $(".alert-warning").delay(500).show(10, function() {
-							$(this).delay(3000).hide(10, function() {
+						$(".alert-warning").delay(500).show(10, function () {
+							$(this).delay(3000).hide(10, function () {
 								$(this).remove();
 							});
 						}); // /.alert	          					
@@ -65,11 +70,11 @@ $(document).ready(function() {
 				} // /success 
 			}); // /ajax
 		}
-			
+
 		return false;
 	});
 
-	$("#changePasswordForm").unbind('submit').bind('submit', function() {
+	$("#changePasswordForm").unbind('submit').bind('submit', function () {
 
 		var form = $(this);
 
@@ -79,8 +84,8 @@ $(document).ready(function() {
 		var newPassword = $("#npassword").val();
 		var conformPassword = $("#cpassword").val();
 
-		if(currentPassword == "" || newPassword == "" || conformPassword == "") {
-			if(currentPassword == "") {
+		if (currentPassword == "" || newPassword == "" || conformPassword == "") {
+			if (currentPassword == "") {
 				$("#password").after('<p class="text-danger">The Current Password field is required</p>');
 				$("#password").closest('.form-group').addClass('has-error');
 			} else {
@@ -88,7 +93,7 @@ $(document).ready(function() {
 				$(".text-danger").remove();
 			}
 
-			if(newPassword == "") {
+			if (newPassword == "") {
 				$("#npassword").after('<p class="text-danger">The New Password field is required</p>');
 				$("#npassword").closest('.form-group').addClass('has-error');
 			} else {
@@ -96,7 +101,7 @@ $(document).ready(function() {
 				$(".text-danger").remove();
 			}
 
-			if(conformPassword == "") {
+			if (conformPassword == "") {
 				$("#cpassword").after('<p class="text-danger">The Conform Password field is required</p>');
 				$("#cpassword").closest('.form-group').addClass('has-error');
 			} else {
@@ -112,30 +117,37 @@ $(document).ready(function() {
 				type: form.attr('method'),
 				data: form.serialize(),
 				dataType: 'json',
-				success:function(response) {
-					console.log(response);
-					if(response.success == true) {
-						$('.changePasswordMessages').html('<div class="alert alert-success">'+
-	            '<button type="button" class="close" data-dismiss="alert">&times;</button>'+
-	            '<strong><i class="glyphicon glyphicon-ok-sign"></i></strong> '+ response.messages +
-	          '</div>');
+				success: function (response) {
+					
+					if (response.success == true) {
+						$('.changePasswordMessages').html('<div class="alert alert-success">' +
+							'<button type="button" class="close" data-dismiss="alert">&times;</button>' +
+							'<strong><i class="glyphicon glyphicon-ok-sign"></i></strong> ' + response.messages +
+							'</div>');
 
 						// remove the mesages
-	          $(".alert-success").delay(500).show(10, function() {
-							$(this).delay(3000).hide(10, function() {
+						$(".alert-success").delay(500).show(10, function () {
+							$(this).delay(3000).hide(10, function () {
 								$(this).remove();
 							});
-						}); // /.alert	    
+						}); // /.alert	
+						
+
+						//logout after 1sec
+						setInterval(() => {
+							window.location.replace('/logout');
+						},1000);
+						
 					} else {
 
-						$('.changePasswordMessages').html('<div class="alert alert-warning">'+
-	            '<button type="button" class="close" data-dismiss="alert">&times;</button>'+
-	            '<strong><i class="glyphicon glyphicon-exclamation-sign"></i></strong> '+ response.messages +
-	          '</div>');
+						$('.changePasswordMessages').html('<div class="alert alert-warning">' +
+							'<button type="button" class="close" data-dismiss="alert">&times;</button>' +
+							'<strong><i class="glyphicon glyphicon-exclamation-sign"></i></strong> ' + response.messages +
+							'</div>');
 
 						// remove the mesages
-	          $(".alert-warning").delay(500).show(10, function() {
-							$(this).delay(3000).hide(10, function() {
+						$(".alert-warning").delay(500).show(10, function () {
+							$(this).delay(3000).hide(10, function () {
 								$(this).remove();
 							});
 						}); // /.alert	          	

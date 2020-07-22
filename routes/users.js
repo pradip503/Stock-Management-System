@@ -59,6 +59,7 @@ router.post('/generateReport',checkIfAuthenticated, report.generateReport);
 
 /*SETTINGG's API */
 router.post('/changeUsername', setting.changeUsername);
+router.post('/changePassword', setting.changePassword);
 
 function checkIfAuthenticated(req, res, next){
     if(req.isAuthenticated()){

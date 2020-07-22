@@ -44,7 +44,7 @@ app.engine('handlebars', exphs({defaultLayout: 'index',helpers: {formatProductOp
 app.use(flash());
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    resave: true,
+    resave: false,
     saveUninitialized: false
 }));
 
