@@ -7,7 +7,7 @@ var connection = mysql.createConnection({
   user     : 'root',
   password : '',
   database : 'stock',
-  dateStrings: true
+  dateStrings: true,
 });
  
 connection.connect((error) => {

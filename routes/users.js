@@ -7,6 +7,7 @@ var products = require('../services/product');
 var orders = require('../services/order');
 var dashboard = require('../services/dashboard');
 var report = require('../services/report');
+var setting = require('../services/settings');
 
 /* BRAND'S API. */
 router.get('/fetchBrands',checkIfAuthenticated, brands.fetchBrands);
@@ -54,6 +55,10 @@ router.get('/getTotalCashReceived',checkIfAuthenticated, dashboard.getTotalPaid)
 
 /*REPORT'S API*/
 router.post('/generateReport',checkIfAuthenticated, report.generateReport);
+
+
+/*SETTINGG's API */
+router.post('/changeUsername', setting.changeUsername);
 
 function checkIfAuthenticated(req, res, next){
     if(req.isAuthenticated()){

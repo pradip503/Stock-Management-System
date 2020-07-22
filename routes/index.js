@@ -125,7 +125,8 @@ router.get('/report',checkIfAuthenticated, function (req, res, next) {
 
 /* GET setting page. */
 router.get('/setting',checkIfAuthenticated, function (req, res, next) {
-  res.render('website/setting');
+  const user_id = req.user? req.user.user_id:null;
+  res.render('website/setting', {user_id});
 });
 
 /* GET report page. */

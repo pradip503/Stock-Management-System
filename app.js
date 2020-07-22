@@ -44,7 +44,7 @@ app.engine('handlebars', exphs({defaultLayout: 'index',helpers: {formatProductOp
 app.use(flash());
 app.use(session({
     secret: process.env.SESSION_SECRET,
-    resave: false,
+    resave: true,
     saveUninitialized: false
 }));
 
@@ -60,8 +60,9 @@ app.post('/login', passport.authenticate('local', {
 }));
 
 //set locals if login
-app.use(function (req, res, next) {
+app.use(async function (req, res, next) {
     res.locals.login = req.isAuthenticated();
+    res.locals.username = req.user?req.user.username : null;
     next();
   });
 
