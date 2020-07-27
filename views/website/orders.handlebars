@@ -264,7 +264,6 @@
         if (selected_product_id > 0) {
             jQuery.support.cors = true;
             $.post('api/fetchSelectedProduct', { productId: selected_product_id }, function (response) {
-                console.log(response);
                 quantity = response.data[0].quantity;
                 $('#available_quantity').text(response.data[0].quantity);
             })
@@ -279,7 +278,6 @@
         var product_rate = Number($("#item_select option:selected").data('rate'));
         var product_unit = $("#item_select option:selected").data('unit');
         var product_total = (product_quantity * product_rate).toFixed(2);
-        console.log(product_id, product_name, product_quantity, product_rate, product_unit, product_total);
         if (product_quantity <= quantity && product_quantity > 0) {
             $('table#productTable').append(`<tr class="row"><td class="col-md-1">${product_id}</td><td>${product_name}</td><td id='edit_quantity' contenteditable>${product_quantity}</td><td>${product_rate}</td><td>${product_total}</td><td><button style="margin-left:10px; border:0; background-color:red;" id="deleterow"><i style="color:white;" class="glyphicon glyphicon-trash"></i></button></td></tr>`)
             $("#item_select").val('0').change();
@@ -297,10 +295,9 @@
     const count_quantity = () => {
         var total_quantity = 0;
         var tr_length = $("table#productTable tr:gt(0)").length;
-        console.log(tr_length);
+       
         if (tr_length > 0) {
             $("table#productTable tr:gt(0)").each((index, result) => {
-                console.log("index is", index);
 
                 total_quantity += Number($(result).find('td').eq(2).text());
                 if (tr_length === index + 1) {
@@ -337,7 +334,6 @@
     }
     const calculate_total = (e) => {
         var discount_type = $('#discount_type').val();
-        console.log(discount_type);
         var taxable_amount = 0;
         var discount_value = Number($('#add_discount').val()).toFixed(2);
         if (Number($('#subTotal').val()) > 0) {
@@ -414,7 +410,6 @@
 
     $(document).on('click', '#deleterow', (e) => {
         e.preventDefault();
-        console.log("hello");
         $('#deleterow').closest('tr').remove();
         count_quantity();
         count_total();
@@ -423,12 +418,12 @@
 
     $(document).on('keyup', '#edit_quantity', (e) => {
         var product_quantity = $('#edit_quantity').text();
-        console.log(product_quantity);
+       
         var product_rate = $('#edit_quantity').next('td').text();
-        console.log(product_rate);
+        
         var product_total = (product_quantity * product_rate).toFixed(2);
         $('#edit_quantity').next('td').next('td').text(product_total);
-        console.log(product_total);
+        
         count_quantity();
         count_total();
         calculate_function();
@@ -450,7 +445,7 @@
                 product_quantity.push({ product_id: $(result).find('td').eq(0).text(), quantity: $(result).find('td').eq(2).text() })
                 if (tr_length === index + 1) {
                     $.post('api/addOrder', ({ order_data: order_data, order_item_data: order_item_data, product_quantity: product_quantity }), (response) => {
-                        console.log(response);
+                        
                         if (response.success) {
                             setTimeout(() => {
                                 alert("Added successfully")
